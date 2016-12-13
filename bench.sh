@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ "$#" -ne 2 ]; then
     echo "Compares bcachefs to other filesystems and packages output."
-    echo "Requires: fio, mkfs.<filesystem>, mktemp, zip, sed, wipefs, bcache, block device with at least 10G of space."
+    echo "Requires: fio, mkfs.<filesystem>, mktemp, zip, sed, wipefs, bcache, hdparm, fdisk, block device with at least 10G of space."
     echo "Usage: benchmark.sh [btrfs,ext4,xfs] <block_device>"
     echo "Benchmark bundle is output to <timestamp>-<filesystems>.zip"
     echo "WARNING: Given device will be erased."
@@ -48,7 +48,8 @@ bench() {
 
 OUTPUT_DIR="$(mktemp -d)"
 
-hdparm -I /dev/sdg | grep 'Model Number' | cut -d ':' -f 2 | sed -e 's/^[ \t]*//' > "${OUTPUT_DIR}/model_number.txt"
+hdparm -I "${DEVICE}" | grep 'Model Number' | cut -d ':' -f 2 | sed -e 's/^[ \t]*//' > "${OUTPUT_DIR}/model_number.txt"
+fdisk -l "${DEVICE}" > "${OUTPUT_DIR}/fdisk.txt"
 
 bench bcache "${OUTPUT_DIR}"
 
