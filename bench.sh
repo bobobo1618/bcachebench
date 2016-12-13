@@ -50,6 +50,7 @@ OUTPUT_DIR="$(mktemp -d)"
 
 hdparm -I "${DEVICE}" | grep 'Model Number' | cut -d ':' -f 2 | sed -e 's/^[ \t]*//' > "${OUTPUT_DIR}/model_number.txt"
 fdisk -l "${DEVICE}" > "${OUTPUT_DIR}/fdisk.txt"
+echo "${TIMESTAMP}" > "${OUTPUT_DIR}/date.txt"
 
 bench bcache "${OUTPUT_DIR}"
 
