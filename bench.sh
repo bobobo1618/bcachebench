@@ -47,6 +47,9 @@ bench() {
 }
 
 OUTPUT_DIR="$(mktemp -d)"
+
+hdparm -I /dev/sdg | grep 'Model Number' | cut -d ':' -f 2 | sed -e 's/^[ \t]*//' > "${OUTPUT_DIR}/model_number.txt"
+
 bench bcache "${OUTPUT_DIR}"
 
 for fs in ${FILESYSTEMS//,/ }; do
